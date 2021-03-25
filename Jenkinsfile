@@ -14,7 +14,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        dir('CompactDiscDaoWithRestAndBoot') {
+        dir('.') {
           withMaven (
             maven: 'mvn363',
             mavenLocalRepo: '.repository',
@@ -26,7 +26,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        dir('CompactDiscDaoWithRestAndBoot') {
+        dir('.') {
           withMaven (
             maven: 'mvn363',
             mavenLocalRepo: '.repository',

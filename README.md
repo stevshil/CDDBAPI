@@ -19,9 +19,36 @@ For Jenkins to understand the pipeline you will need to add the following plugin
 Plugins:
 
 * Blue Ocean
+  - Jenkins automated installation ID = **blueocean**
+  - This installs a lot of other plugins, so if you are automating you'll need to get all IDs.
+* Maven Integration
+  - Jenkins automated installation ID = **maven-plugin**
+  - Also installs **javadoc**.
+* Pipeline Maven Integration
+  - Jenkins automated installation ID = **pipeline-maven**
+  - Required for the withMaven() in the Jenkinsfile
+    - Also installs
+      - H2 API
+      - Config File Provider
 
-Configurations:
+Global Tool Configurations:
+ * Add a Maven installation
+   - Name: mvn363
+     - This name aligns with the Jenkinsfile in the repo
+   - Install from Apache version 3.6.3
+   - Save
 
+### Adding the GIT repo
+
+This project is added to your Jenkins server through the **Open Blue Ocean** link on the side menu.
+
+Click the **Create a new Pipeline** button when it pops up.
+
+Select GIT not GitHub as the connection to the repository and use your HTTPS connection.
+
+Ignore the login unless your repo is private, this one is not.
+
+Click **Create Pipeline**.
 
 ## The API
 
