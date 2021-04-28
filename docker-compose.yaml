@@ -1,29 +1,31 @@
 version: '3.0'
 services:
-   mysql:
-     container_name: mysql
+   cddb:
+     container_name: cddb
      build:
        context: .
-       dockerfile: Dockerfile-mysql
-     image: cd/mysql:1.0.0
+       dockerfile: ./Build_Containers/Dockerfile-mysql
+     image: cd/cddb:1.0.0
      ports:
        - "3306:3306"
-     volumes:
-           - /docker/cds/mysql:/var/lib/mysql
+     # volumes:
+     #       - /docker/cds/mysql:/var/lib/mysql
      restart: always
      environment:
        MYSQL_ROOT_PASSWORD: secret123
      command: --explicit_defaults_for_timestamp
 
 
-   cd:
-     container_name: cd-server
+   cdapi:
+     container_name: cdapi
      build:
        context: .
-       dockerfile: Dockerfile-cd-server
-     image: cd/cd-server:1.0.0
+       dockerfile: ./Build_Containers/Dockerfile-cdapi
+     image: cd/cdapi:1.0.0
      links:
-       - mysql:mysql
+       - cddb:cddb
      ports:
        - "8080:8080"
      restart: always
+     depends_on:
+       - cddb

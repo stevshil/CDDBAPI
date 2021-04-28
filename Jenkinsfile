@@ -1,45 +1,17 @@
+// This file sets up the use of the Job DSL plugin to scan the repository for jobs to create/change/delete
 pipeline {
-  agent any
-  stages {
-    stage('Clone') {
-      steps{
-        checkout([$class: 'GitSCM',
-          branches: [[name: '*/master']],
-          extensions: [
-            [$class: 'RelativeTargetDirectory', relativeTargetDir: '.']
-          ],
-          userRemoteConfigs: [[url: 'https://github.com/stevshil/CDDBAPI.git']]
-        ])
-      }
+    agent {
+        kubernetes {}
     }
-    stage('Build') {
-      steps {
-        dir('.') {
-          withMaven (
-            maven: 'mvn363',
-            mavenLocalRepo: '.repository',
-          ){
-            sh 'mvn -Dmaven.test.skip=true clean package'
-          }
+    stages {    
+        stage('Process Jobs') {
+            steps {
+                jobDsl targets: ['*.groovy'].join('\n'), // Expects a string with newlines separating each target. Allows multiple.
+                        removedJobAction: 'IGNORE',
+                        removedViewAction: 'IGNORE',
+                        lookupStrategy: 'JENKINS_ROOT'
+            }
         }
-      }
     }
-    stage('Test') {
-      steps {
-        dir('.') {
-          withMaven (
-            maven: 'mvn363',
-            mavenLocalRepo: '.repository',
-          ){
-            sh 'mvn test'
-          }
-        }
-      }
-    }
-    stage('Publish') {
-      steps {
-        echo 'Publish to our software repository'
-      }
-    }
-  }
 }
+
